@@ -1,7 +1,28 @@
+import password_module
+import csv
+
+
 class User:
-    def __init__(self, name, password):
-        self.name = name
-        self.password = password
+    log_in = False
+    user_name = None
+    user_table = []
+
+    def __init__(self):
+        with open('user_table.csv', 'r') as file_user_table:
+            for row in csv.DictReader(file_user_table):
+                print(row['Name'])
+                User.user_table.append(row['Name'])
+        print(User.user_table)
+
+    def sign_up(self):
+        self.user_name = input('Please input your Username\n>>> ')
+        while self.user_name in User.user_table:
+            self.user_name = input('This name is be use, try another\n>>> ')
+        user_password = password_module.set_password()
+        with open('user_table.csv', 'w') as file_user_table:
+            w = csv.DictWriter(file_user_table)
+            w.writer(self.user_name, user_password)
+        print(User.user_table)
 
     @staticmethod
     # https://openhome.cc/Gossip/Python/WithAs.html

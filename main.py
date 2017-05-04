@@ -1,4 +1,5 @@
 import key_in_module as keyin
+from user_module import *
 
 def logo():
     print('''
@@ -12,8 +13,9 @@ def logo():
 
 
 def main():
-    logo()
-    keyin.sign_up()
+    # logo()
+    user = User()
+    user.sign_up()
 
 if __name__ == '__main__':
     main()
