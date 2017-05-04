@@ -19,9 +19,11 @@ class User:
         while self.user_name in User.user_table:
             self.user_name = input('This name is be use, try another\n>>> ')
         user_password = password_module.set_password()
-        with open('user_table.csv', 'w') as file_user_table:
-            w = csv.DictWriter(file_user_table)
-            w.writer(self.user_name, user_password)
+        # user_password = '########################'
+        User.user_table.append(self.user_name)
+        with open('user_table.csv', 'a', newline='') as file_user_table:
+            w = csv.writer(file_user_table)
+            w.writerow([self.user_name, user_password])
         print(User.user_table)
 
     @staticmethod
