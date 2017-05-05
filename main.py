@@ -17,6 +17,7 @@ def main():
     # logo()
     user = User()
     user.sign_up()
+    user.log_in()
 
 
 if __name__ == '__main__':

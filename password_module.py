@@ -23,3 +23,8 @@ def set_password():
         return set_password()
     else:
         return get_digest(password.encode())
+
+
+def receive_password_hash():
+    password = getpass.getpass('Password\n>>> (Cannot see)')
+    return get_digest(password.encode())
