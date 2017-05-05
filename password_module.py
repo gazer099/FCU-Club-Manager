@@ -22,7 +22,7 @@ def set_password():
         print('<<Your password entry is inconsistent, Please try again>>')
         return set_password()
     else:
-        return get_digest(password.encode())
+        return password
 
 
 def receive_password_hash():
