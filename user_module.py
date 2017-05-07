@@ -28,6 +28,12 @@ class User:
         # add user into user_dict
         self.add_user_into_dict(username, password_digest)
 
+    def sgin_in(self):
+        pass
+
+    def is_log_in(self, user, password_digest):
+        pass
+
     def add_user_into_csv(self, username, password_digest):
         with open('user_table.csv', 'a', newline='') as file_user_table:
             w = csv.writer(file_user_table)
