@@ -1,8 +1,12 @@
 import csv
 import numpy as np
 import matplotlib.pyplot as plt
+import date_dictionary
 
 file_name = '01F2483N-03F2709S.csv'
+dict_entire = date_dictionary.get_dict_entire()
+flow_all = []
+
 
 def fix_header():
     with open('Fixed_01F2483N-03F2709S.csv', 'w', newline='') as fixed_file:
@@ -16,3 +20,13 @@ def fix_header():
                 fixed.writerow(row)
 
 fix_header()
+
+with open('Fixed_01F2483N-03F2709S.csv') as file:
+    for row in csv.DictReader(file):
+        if row['date'] in dict_entire:
+            dict_entire[row['date']] += int(row['flow31'])+int(row['flow32'])+int(row['flow41'])+int(row['flow42'])+int(row['flow5'])
+
+for row in dict.items(dict_entire):
+    print(row, type(row))
+    flow_all.append(row[1])
+print(flow_all)
