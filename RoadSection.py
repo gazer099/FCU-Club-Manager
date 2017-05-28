@@ -30,3 +30,7 @@ for row in dict.items(dict_entire):
     print(row, type(row))
     flow_all.append(row[1])
 print(flow_all)
+
+flow_all = np.array(flow_all)
+plt.plot(flow_all)
+plt.show()
