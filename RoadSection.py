@@ -6,8 +6,9 @@ import date_dictionary
 
 class RoadSection:
     file_name = None
-    file_start_dat = None
-    file_end_dat = None
+    file_start_day = None
+    file_end_day = None
+    file_miss_day = []
     dict_entire = date_dictionary.get_dict_entire()
     flow_all = []
 
@@ -22,13 +23,15 @@ class RoadSection:
                     self.dict_entire[row['date']] += int(row['flow31']) + int(row['flow32']) + int(row['flow41']) + int(
                         row['flow42']) + int(row['flow5'])
 
-                if self.file_start_dat is None:
-                    self.file_start_dat = row['date']
-                    self.file_end_dat = row['date']
+                if self.file_start_day is None:
+                    self.file_start_day = row['date']
+                    self.file_end_day = row['date']
                 else:
-                    self.file_end_dat = row['date']
+                    self.file_end_day = row['date']
 
         for row in dict.items(self.dict_entire):
+            if row[0] >= self.file_start_day and row[1] == 0:
+                self.file_miss_day.append(row[0])
             print(row, type(row))
             self.flow_all.append(row[1])
         print(self.flow_all)
@@ -55,8 +58,9 @@ class RoadSection:
     def show_info(self):
         print('## Road Section Info.')
         print('File name:', self.file_name)
-        print('File start day:', self.file_start_dat)
-        print('File end day:', self.file_end_dat)
+        print('File start day:', self.file_start_day)
+        print('File end day:', self.file_end_day)
+        print('File miss day:', self.file_miss_day)
 
 if __name__ == '__main__':
     rs = RoadSection('01F2483N-03F2709S.csv')
