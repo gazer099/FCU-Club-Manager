@@ -17,7 +17,7 @@ class RoadSection:
 
     def load(self):
         self.fix_header()
-        with open('Fixed_'+self.file_name) as file:
+        with open('Fixed_' + self.file_name) as file:
             for row in csv.DictReader(file):
                 if row['date'] in self.dict_entire:
                     self.dict_entire[row['date']] += int(row['flow31']) + int(row['flow32']) + int(row['flow41']) + int(
@@ -61,6 +61,7 @@ class RoadSection:
         print('File start day:', self.file_start_day)
         print('File end day:', self.file_end_day)
         print('File miss day:', self.file_miss_day)
+
 
 if __name__ == '__main__':
     rs = RoadSection('01F2483N-03F2709S.csv')

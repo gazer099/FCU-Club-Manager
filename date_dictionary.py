@@ -3,6 +3,7 @@ import datetime as dt
 start_day = dt.datetime(2015, 1, 1)
 end_day = dt.datetime(2016, 9, 30)
 
+
 def get_dict_entire():
     dic = {}
     current_day = start_day
