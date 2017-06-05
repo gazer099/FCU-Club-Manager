@@ -3,6 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import date_dictionary
 
+from matplotlib.font_manager import FontProperties
+
+font = FontProperties(fname=r"c:\windows\Fonts\SimSun.ttc", size=12)
+
 
 class RoadSection:
     file_name = None
@@ -39,6 +43,9 @@ class RoadSection:
     def show_plot(self):
         self.flow_all = np.array(self.flow_all)
         plt.plot(self.flow_all)
+        plt.title(self.file_name, fontproperties=font)
+        plt.xlabel('day')
+        plt.ylabel('flow')
         plt.show()
 
     def fix_header(self):
@@ -66,5 +73,5 @@ class RoadSection:
 if __name__ == '__main__':
     rs = RoadSection('01F2483N-03F2709S.csv')
     rs.load()
-    # rs.show_plot()
+    rs.show_plot()
     rs.show_info()
