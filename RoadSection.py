@@ -60,6 +60,16 @@ class RoadSection:
         plt.ylabel('flow')
         plt.show()
 
+    def show_plot_hold_on_google_trend(self, google_trend):
+        flow_really_all = np.array(self.flow_all[self.really_start_day_index:])
+        plt.plot(flow_really_all, label='Traffic flow')
+        plt.plot(np.array(google_trend.trend_percentage[self.really_start_day_index:]), label='Google Trend')
+        plt.title(self.road_section_name, fontproperties=font)
+        plt.xlabel('day')
+        plt.ylabel('flow')
+        plt.legend()
+        plt.show()
+
     def fix_header(self):
         with open('Fixed_' + self.file_name, 'w', newline='') as fixed_file:
             fixed = csv.writer(fixed_file)
@@ -85,7 +95,12 @@ class RoadSection:
 
 
 if __name__ == '__main__':
+    import GoogleTrend
+
+    gt = GoogleTrend.GoogleTrend('multiTimeline.csv')
+    gt.load()
     rs = RoadSection('01F2483N-03F2709S.csv')
     rs.load()
     rs.show_info()
-    rs.show_plot()
+    # rs.show_plot()
+    rs.show_plot_hold_on_google_trend(gt)
