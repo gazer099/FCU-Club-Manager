@@ -23,6 +23,11 @@ class GoogleTrend:
         self.file_name = file_name
 
     def load(self):
+        try:
+            open(self.file_name)
+        except FileNotFoundError as err:
+            print(err)
+            return False
         with open(self.file_name, encoding='utf8') as file:
             for idx, line in enumerate(file):
                 if idx == 0:
@@ -40,6 +45,7 @@ class GoogleTrend:
                         self.trend_end_day = line[0]
         for row in self.dict_entire.values():
             self.trend_percentage.append(int(row))
+        return True
 
     def show_info(self):
         print('## Road Section Info.')

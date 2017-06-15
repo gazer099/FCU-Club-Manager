@@ -24,6 +24,11 @@ class RoadSection:
         self.file_name = file_name
 
     def load(self):
+        try:
+            open(self.file_name)
+        except FileNotFoundError as err:
+            print(err)
+            return False
         # Get road section name
         dm = DataManager.DataManager()
         self.road_section_name = dm.get_road_section_name(self.file_name)
@@ -51,6 +56,7 @@ class RoadSection:
             # print(row, type(row))
             self.flow_all.append(row[1])
             # print(self.flow_all)
+        return True
 
     def show_plot(self):
         flow_really_all = np.array(self.flow_all[self.really_start_day_index:])
