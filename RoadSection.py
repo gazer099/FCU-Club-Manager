@@ -70,7 +70,7 @@ class RoadSection:
         flow_really_all = np.array(self.flow_all[self.really_start_day_index:])
         plt.plot(flow_really_all, label='Traffic flow')
         plt.plot(np.array(google_trend.trend_percentage[self.really_start_day_index:]), label='Google Trend')
-        plt.title(self.road_section_name, fontproperties=font)
+        plt.title(self.road_section_name + '\n' + google_trend.target + ' Google搜尋趨勢', fontproperties=font)
         plt.xlabel('day')
         plt.ylabel('flow')
         plt.legend()
