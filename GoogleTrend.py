@@ -47,7 +47,7 @@ class GoogleTrend:
         for row in self.dict_entire.values():
             self.trend_percentage.append(int(row))
         # print(self.trend_percentage)
-        # Determine the really start day and file miss day
+        # Determine the trend start day index
         for idx, row in enumerate(dict.items(self.dict_entire)):
             # print(idx, row)
             if int(row[1]) != 0:
@@ -65,8 +65,8 @@ class GoogleTrend:
         print('Trend end day:', self.trend_end_day)
 
     def show_plot(self):
-        self.trend_percentage = np.array(self.trend_percentage)
-        plt.plot(self.trend_percentage[self.trend_start_day_index:])
+        self.trend_percentage = np.array(self.trend_percentage[self.trend_start_day_index:])
+        plt.plot(self.trend_percentage)
         plt.title(self.target + ' Google搜尋趨勢', fontproperties=font)
         plt.xlabel('day')
         plt.ylabel('percentage')
