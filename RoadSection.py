@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import date_dictionary
 import DataManager
+import os
 
 from matplotlib.font_manager import FontProperties
 
@@ -11,6 +12,7 @@ font = FontProperties(fname=r"c:\windows\Fonts\SimSun.ttc", size=12)
 
 class RoadSection:
     file_name = None
+    file_path = None
     road_section_name = None
     file_start_day = None
     file_end_day = None
@@ -22,10 +24,11 @@ class RoadSection:
 
     def __init__(self, file_name):
         self.file_name = file_name
+        self.file_path = str(os.path.join(os.getcwd(), 'RoadSectionData', self.file_name))
 
     def load(self):
         try:
-            open(self.file_name)
+            open(self.file_path)
         except FileNotFoundError as err:
             print(err)
             return False
@@ -33,9 +36,9 @@ class RoadSection:
         dm = DataManager.DataManager()
         self.road_section_name = dm.get_road_section_name(self.file_name)
         # Fix original file header
-        self.fix_header()
+        self.revise_header()
         # Load data of flow
-        with open('Fixed_' + self.file_name) as file:
+        with open(str(os.path.join(os.getcwd(), 'RoadSectionData', 'Revised', 'Revised_' + self.file_name))) as file:
             for row in csv.DictReader(file):
                 if row['date'] in self.dict_entire:
                     self.dict_entire[row['date']] += int(row['flow31']) + int(row['flow32']) + int(row['flow41']) + int(
@@ -76,14 +79,15 @@ class RoadSection:
         plt.legend()
         plt.show()
 
-    def fix_header(self):
-        with open('Fixed_' + self.file_name, 'w', newline='') as fixed_file:
+    def revise_header(self):
+        with open(str(os.path.join(os.getcwd(), 'RoadSectionData', 'Revised', 'Revised_' + self.file_name)), 'w',
+                  newline='') as fixed_file:
             fixed = csv.writer(fixed_file)
             fixed.writerow(
                 ['no', 'start', 'end', 'type31', 'travel31', 'flow31', 'type32', 'travel32', 'flow32', 'type41',
                  'travel41', 'flow41', 'type42', 'travel42', 'flow42', 'type5', 'travel5', 'flow5', 'avetime', 'date',
                  'time'])
-            with open(self.file_name) as original_file:
+            with open(self.file_path) as original_file:
                 ori = csv.reader(original_file)
                 for row in ori:
                     if ori.line_num == 1:

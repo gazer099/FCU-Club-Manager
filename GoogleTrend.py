@@ -1,7 +1,7 @@
-import csv
 import numpy as np
 import matplotlib.pyplot as plt
 import date_dictionary
+import os
 
 from matplotlib.font_manager import FontProperties
 
@@ -10,6 +10,7 @@ font = FontProperties(fname=r"c:\windows\Fonts\SimSun.ttc", size=12)
 
 class GoogleTrend:
     file_name = None
+    file_path = None
     target = None
     trend_start_day = None
     trend_end_day = None
@@ -22,14 +23,15 @@ class GoogleTrend:
 
     def __init__(self, file_name):
         self.file_name = file_name
+        self.file_path = str(os.path.join(os.getcwd(), 'GoogleTrendData', self.file_name))
 
     def load(self):
         try:
-            open(self.file_name)
+            open(self.file_path)
         except FileNotFoundError as err:
             print(err)
             return False
-        with open(self.file_name, encoding='utf8') as file:
+        with open(self.file_path, encoding='utf8') as file:
             for idx, line in enumerate(file):
                 if idx == 0:
                     self.category = line[3:-1]

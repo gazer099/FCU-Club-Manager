@@ -1,11 +1,11 @@
-import csv
+import os
 
 
 class DataManager:
     section_list = []
 
     def __init__(self):
-        with open('IntervalCodeName.csv') as file:
+        with open(os.path.join(os.getcwd(), 'RoadSectionData', 'IntervalCodeName.csv')) as file:
             for row in file:
                 self.section_list.append(row)
 
