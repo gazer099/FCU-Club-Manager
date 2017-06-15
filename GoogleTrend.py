@@ -28,7 +28,6 @@ class GoogleTrend:
                 if idx == 0:
                     self.category = line[3:-1]
                 if idx == 2:
-                    # todo solve split problem
                     self.target = line.split(':')[0][2:]  # 天,劍湖山: (全球)
                     self.area = line.split(':')[1][1:]
                 if idx >= 3 and line != '':

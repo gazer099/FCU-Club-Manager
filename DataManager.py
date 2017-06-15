@@ -22,8 +22,24 @@ class DataManager:
                 count += 1
         print('共搜尋到', count, '筆資料')
 
+    def get_road_section_name(self, file_name):
+        file_name = file_name.split('-')
+        file_name[1] = file_name[1][:-4]
+        # print(file_name)
+        road_section_name = None
+        for row in self.section_list:
+            if file_name[0] in row and file_name[1] in row:
+                # print(row)
+                road_section_name = row
+                break
+        if road_section_name is not None:
+            # print(road_section_name)
+            return road_section_name
+        else:
+            return False
 
 if __name__ == '__main__':
     dm = DataManager()
     dm.show_section_list()
-    dm.search_section_list('高公局')
+    # dm.search_section_list('高公局')
+    dm.get_road_section_name('01F2483N-03F2709S.csv')

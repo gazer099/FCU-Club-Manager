@@ -2,6 +2,7 @@ import csv
 import numpy as np
 import matplotlib.pyplot as plt
 import date_dictionary
+import DataManager
 
 from matplotlib.font_manager import FontProperties
 
@@ -10,6 +11,7 @@ font = FontProperties(fname=r"c:\windows\Fonts\SimSun.ttc", size=12)
 
 class RoadSection:
     file_name = None
+    road_section_name = None
     file_start_day = None
     file_end_day = None
     file_miss_day = []
@@ -22,33 +24,38 @@ class RoadSection:
         self.file_name = file_name
 
     def load(self):
+        # Get road section name
+        dm = DataManager.DataManager()
+        self.road_section_name = dm.get_road_section_name(self.file_name)
+        # Fix original file header
         self.fix_header()
+        # Load data of flow
         with open('Fixed_' + self.file_name) as file:
             for row in csv.DictReader(file):
                 if row['date'] in self.dict_entire:
                     self.dict_entire[row['date']] += int(row['flow31']) + int(row['flow32']) + int(row['flow41']) + int(
                         row['flow42']) + int(row['flow5'])
-
+                # Determine the file start day and end day
                 if self.file_start_day is None:
                     self.file_start_day = row['date']
                     self.file_end_day = row['date']
                 else:
                     self.file_end_day = row['date']
-
+        # Determine the really start day and file miss day
         for idx, row in enumerate(dict.items(self.dict_entire)):
             if row[0] >= self.file_start_day and row[1] != 0 and self.really_start_day is None:
                 self.really_start_day = row[0]
                 self.really_start_day_index = idx
             elif row[0] >= self.file_start_day and row[1] == 0 and self.really_start_day is not None:
                 self.file_miss_day.append(row[0])  # since really_start_day
-            print(row, type(row))
+            # print(row, type(row))
             self.flow_all.append(row[1])
-        print(self.flow_all)
+            # print(self.flow_all)
 
     def show_plot(self):
         flow_really_all = np.array(self.flow_all[self.really_start_day_index:])
         plt.plot(flow_really_all)
-        plt.title(self.file_name, fontproperties=font)
+        plt.title(self.road_section_name, fontproperties=font)
         plt.xlabel('day')
         plt.ylabel('flow')
         plt.show()
@@ -69,11 +76,12 @@ class RoadSection:
 
     def show_info(self):
         print('## Road Section Info.')
-        print('File name       :', self.file_name)
-        print('File start day  :', self.file_start_day)
-        print('File end day    :', self.file_end_day)
-        print('Really start day:', self.really_start_day)
-        print('File miss day   :', self.file_miss_day)
+        print('Road Section Name:', self.road_section_name, end='')
+        print('File name        :', self.file_name)
+        print('File start day   :', self.file_start_day)
+        print('File end day     :', self.file_end_day)
+        print('Really start day :', self.really_start_day)
+        print('File miss day    :', self.file_miss_day)
 
 
 if __name__ == '__main__':
