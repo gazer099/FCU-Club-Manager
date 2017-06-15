@@ -16,6 +16,7 @@ class GoogleTrend:
     category = None
     area = None
     trend_percentage = []
+    trend_start_day_index = None
 
     dict_entire = date_dictionary.get_dict_entire()
 
@@ -45,6 +46,13 @@ class GoogleTrend:
                         self.trend_end_day = line[0]
         for row in self.dict_entire.values():
             self.trend_percentage.append(int(row))
+        # print(self.trend_percentage)
+        # Determine the really start day and file miss day
+        for idx, row in enumerate(dict.items(self.dict_entire)):
+            # print(idx, row)
+            if int(row[1]) != 0:
+                self.trend_start_day_index = idx
+                break
         return True
 
     def show_info(self):
@@ -52,13 +60,13 @@ class GoogleTrend:
         print('File name:', self.file_name)
         print('Category:', self.category)
         print('Target:', self.target)
-        print('Area:', self.area)
+        print('Area:', self.area[:-1])
         print('Trend start day:', self.trend_start_day)
         print('Trend end day:', self.trend_end_day)
 
     def show_plot(self):
         self.trend_percentage = np.array(self.trend_percentage)
-        plt.plot(self.trend_percentage)
+        plt.plot(self.trend_percentage[self.trend_start_day_index:])
         plt.title(self.target + ' Google搜尋趨勢', fontproperties=font)
         plt.xlabel('day')
         plt.ylabel('percentage')
