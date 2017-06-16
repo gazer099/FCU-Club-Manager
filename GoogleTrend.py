@@ -47,7 +47,11 @@ class GoogleTrend:
                     else:
                         self.trend_end_day = line[0]
         for row in self.dict_entire.values():
-            self.trend_percentage.append(int(row))
+            try:
+                self.trend_percentage.append(int(row))
+            except ValueError as err:
+                print(err)
+                return False
         # print(self.trend_percentage)
         # Determine the trend start day index
         for idx, row in enumerate(dict.items(self.dict_entire)):
@@ -74,11 +78,17 @@ class GoogleTrend:
         plt.ylabel('percentage')
         plt.show()
 
-
-if __name__ == '__main__':
-    gt = GoogleTrend('multiTimeline.csv')
-    gt.load()
-    gt.show_info()
-    # for i in gt.dict_entire.item():
-    #     print(i)
-    gt.show_plot()
+# # For debug
+# if __name__ == '__main__':
+#     # gt = GoogleTrend('multiTimeline.csv')
+#     # gt.load()
+#     # gt.show_info()
+#     # # for i in gt.dict_entire.item():
+#     # #     print(i)
+#     # gt.show_plot()
+#
+#     rs_00 = GoogleTrend('multiTimeline.csv')
+#     rs_01 = GoogleTrend('multiTimeline-01.csv')
+#     rs_02 = GoogleTrend('multiTimeline-ValueError.csv')
+#     rs_02.load()
+#     rs_02.show_info()
