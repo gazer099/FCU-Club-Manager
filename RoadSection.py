@@ -25,6 +25,9 @@ class RoadSection:
     def __init__(self, file_name):
         self.file_name = file_name
         self.file_path = str(os.path.join(os.getcwd(), 'RoadSectionData', self.file_name))
+        # 清空不明原因 self.dict_entire 內的殘值
+        for day in self.dict_entire:
+            self.dict_entire[day] = 0
 
     def load(self):
         try:
@@ -37,12 +40,19 @@ class RoadSection:
         self.road_section_name = dm.get_road_section_name(self.file_name)
         # Fix original file header
         self.revise_header()
+        # 清空不明原因 self.dict_entire 內的殘值
+        for day in self.dict_entire:
+            self.dict_entire[day] = 0
         # Load data of flow
         with open(str(os.path.join(os.getcwd(), 'RoadSectionData', 'Revised', 'Revised_' + self.file_name))) as file:
             for row in csv.DictReader(file):
                 if row['date'] in self.dict_entire:
-                    self.dict_entire[row['date']] += int(row['flow31']) + int(row['flow32']) + int(row['flow41']) + int(
-                        row['flow42']) + int(row['flow5'])
+                    try:
+                        self.dict_entire[row['date']] += int(row['flow31']) + int(row['flow32']) + int(
+                            row['flow41']) + int(row['flow42']) + int(row['flow5'])
+                    except ValueError as err:
+                        print(err)
+                        return False
                 # Determine the file start day and end day
                 if self.file_start_day is None:
                     self.file_start_day = row['date']
@@ -103,14 +113,23 @@ class RoadSection:
         print('Really start day :', self.really_start_day)
         print('File miss day    :', self.file_miss_day)
 
-
-if __name__ == '__main__':
-    import GoogleTrend
-
-    gt = GoogleTrend.GoogleTrend('multiTimeline.csv')
-    gt.load()
-    rs = RoadSection('test_file-01.csv')
-    rs.load()
-    rs.show_info()
-    # rs.show_plot()
-    # rs.show_plot_hold_on_google_trend(gt)
+# # For debug
+# if __name__ == '__main__':
+#     import GoogleTrend
+#
+#     rs_01 = RoadSection('01F0005S-01F0017S.csv')
+#     rs_02 = RoadSection('01F0509S-03F0559S.csv')
+#     rs_03 = RoadSection('01F1389N-01F1292N.csv')
+#     rs_04 = RoadSection('01F2483N-03F2709S.csv')
+#     rs_01.load()
+#     rs_02.load()
+#     rs_03.load()
+#     rs_04.load()
+#
+#     gt = GoogleTrend.GoogleTrend('multiTimeline.csv')
+#     gt.load()
+#     rs = RoadSection('test_file-01.csv')
+#     rs.load()
+#     rs_01.show_info()
+#     # rs.show_plot()
+#     # rs.show_plot_hold_on_google_trend(gt)
