@@ -1,7 +1,6 @@
-import RoadSection
-import GoogleTrend
 import DataManager
-import date_dictionary
+import GoogleTrend
+import RoadSection
 
 
 def logo():
