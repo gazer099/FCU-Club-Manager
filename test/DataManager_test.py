@@ -27,3 +27,4 @@ def test_get_road_section_name():
     assert dm.get_road_section_name('!#!$@-%$#%$#') is False
     assert dm.get_road_section_name('!#!as-dasf#') is False
     assert dm.get_road_section_name('000000-0000') is False
+    assert dm.get_road_section_name('001230-0011') is False
