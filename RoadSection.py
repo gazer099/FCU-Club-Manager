@@ -109,8 +109,8 @@ if __name__ == '__main__':
 
     gt = GoogleTrend.GoogleTrend('multiTimeline.csv')
     gt.load()
-    rs = RoadSection('01F2483N-03F2709S.csv')
+    rs = RoadSection('test_file-01.csv')
     rs.load()
     rs.show_info()
     # rs.show_plot()
-    rs.show_plot_hold_on_google_trend(gt)
+    # rs.show_plot_hold_on_google_trend(gt)
