@@ -1,9 +1,10 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import date_dictionary
 import os
 
+import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.font_manager import FontProperties
+
+import date_dictionary
 
 font = FontProperties(fname=r"c:\windows\Fonts\SimSun.ttc", size=12)
 
@@ -62,7 +63,7 @@ class GoogleTrend:
         return True
 
     def show_info(self):
-        print('## Road Section Info.')
+        print('## Google Trend Info.')
         print('File name:', self.file_name)
         print('Category:', self.category)
         print('Target:', self.target)
