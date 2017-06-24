@@ -113,23 +113,36 @@ class RoadSection:
         print('Really start day :', self.really_start_day)
         print('File miss day    :', self.file_miss_day)
 
-# # For debug
-# if __name__ == '__main__':
-#     import GoogleTrend
-#
-#     rs_01 = RoadSection('01F0005S-01F0017S.csv')
-#     rs_02 = RoadSection('01F0509S-03F0559S.csv')
-#     rs_03 = RoadSection('01F1389N-01F1292N.csv')
-#     rs_04 = RoadSection('01F2483N-03F2709S.csv')
-#     rs_01.load()
-#     rs_02.load()
-#     rs_03.load()
-#     rs_04.load()
-#
-#     gt = GoogleTrend.GoogleTrend('multiTimeline.csv')
-#     gt.load()
-#     rs = RoadSection('test_file-01.csv')
-#     rs.load()
-#     rs_01.show_info()
-#     # rs.show_plot()
-#     # rs.show_plot_hold_on_google_trend(gt)
+    def normalize(self):
+        norm = [float(i) / sum(self.flow_all) for i in self.flow_all]
+        norm = [float(i) / max(self.flow_all) for i in self.flow_all]
+        self.flow_all = norm
+
+
+# For debug
+if __name__ == '__main__':
+    import GoogleTrend
+
+    rs = RoadSection('03F2614S-03F2709S.csv')
+    rs.load()
+    rs.normalize()
+    rs.show_info()
+    # rs.show_plot()
+
+    gt = GoogleTrend.GoogleTrend('multiTimeline.csv')
+    gt.load()
+    gt.normalize()
+    gt.show_info()
+    # print(gt.get_peak_info())
+
+    peak_flow_all = []
+    for section in gt.get_peak_info():
+        print(section)
+        peak_flow = []
+        for day in range(section[0], section[1] + 1):
+            peak_flow.append(rs.flow_all[day])
+        peak_flow_all.append(peak_flow)
+
+    for i in peak_flow_all:
+        print(len(i))
+        print(i)
