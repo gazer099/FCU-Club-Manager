@@ -39,6 +39,7 @@ if __name__ == '__main__':
             if not rs.load():
                 input('>>> 請按任意件繼續...')
                 continue
+            rs.normalize()
             rs.show_info()
             rs.show_plot()
             input('>>> 請按任意件繼續...')
@@ -52,6 +53,7 @@ if __name__ == '__main__':
             if not gt.load():
                 input('>>> 請按任意件繼續...')
                 continue
+            gt.normalize()
             gt.show_info()
             gt.show_plot()
             input('>>> 請按任意件繼續...')
@@ -64,6 +66,7 @@ if __name__ == '__main__':
             if not rs.load():
                 input('>>> 請按任意件繼續...')
                 continue
+            rs.normalize()
 
             gt_file_name = input('請輸入"Google搜尋趨勢"檔案名稱\n>>> ')
             if gt_file_name[-4:] != '.csv':
@@ -72,6 +75,7 @@ if __name__ == '__main__':
             if not gt.load():
                 input('>>> 請按任意件繼續...')
                 continue
+            gt.normalize()
 
             if rs.really_start_day_index != gt.trend_start_day_index:
                 print('[warning] 兩檔案資料起始時間不一致')
