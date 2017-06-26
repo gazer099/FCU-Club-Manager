@@ -84,64 +84,50 @@ class GoogleTrend:
         norm = [float(i) / max(self.trend_percentage) for i in self.trend_percentage]
         self.trend_percentage = norm
 
-    def get_peak_info(self):
+    def get_peak_range_all(self):
         datum = 0.2
-        peak_info_all = []
-        peak_info = []
-        # max_temp = 0
+        peak_range_info_all = []
+        peak_range_info = []
         # print(self.trend_percentage)
         for idx, percent in enumerate(self.trend_percentage):
             if percent >= datum:
-                if not peak_info:
-                    peak_info.append(idx)
-                    # if percent > max_temp:
-                    #     max_temp = percent
-            elif len(peak_info) == 1:
-                peak_info.append(idx)
-                # peak_info.append(max_temp)
-                peak_info_all.append(peak_info)
-                peak_info = []
-                # max_temp = 0
-        return peak_info_all
+                if not peak_range_info:
+                    peak_range_info.append(idx)
+            elif len(peak_range_info) == 1:
+                peak_range_info.append(idx)
+                peak_range_info_all.append(peak_range_info)
+                peak_range_info = []
+        return peak_range_info_all
+
+    def get_peak_range_eigenvalues_all(self):
+        peak_range_eigenvalues_all = self.get_peak_range_all()
+        for section in peak_range_eigenvalues_all:
+            eigenvalues = []
+            data = np.array(self.trend_percentage[section[0]:section[1] + 1])
+            eigenvalues.append(data.max())
+            eigenvalues.append(data.min())
+            eigenvalues.append(data.mean())
+            eigenvalues.append(data.std())
+            eigenvalues.append(data.var())
+            eng = 0
+            for i in data:
+                eng += i ** 2
+            eigenvalues.append(eng)
+            eigenvalues.append(len(data))
+            section += eigenvalues
+        return peak_range_eigenvalues_all
 
 
 # For debug
 if __name__ == '__main__':
-    # gt = GoogleTrend('multiTimeline.csv')
-    # gt.load()
-    # gt.show_info()
-    # # for i in gt.dict_entire.item():
-    # #     print(i)
-    # gt.show_plot()
-
-    # rs_00 = GoogleTrend('multiTimeline.csv')
-    # rs_01 = GoogleTrend('multiTimeline-01.csv')
-    # rs_02 = GoogleTrend('multiTimeline-ValueError.csv')
-    # rs_02.load()
-    # rs_02.show_info()
-
     gt = GoogleTrend('multiTimeline.csv')
     gt.load()
     gt.normalize()
     gt.show_info()
-    for i in gt.get_peak_info():
-        print(i)
     # gt.show_plot()
-    pi = gt.get_peak_info()
-    for section in pi:
-        eigenvalues = []
-        data = np.array(gt.trend_percentage[section[0]:section[1] + 1])
-        eigenvalues.append(data.max())
-        eigenvalues.append(data.min())
-        eigenvalues.append(data.mean())
-        eigenvalues.append(data.std())
-        eigenvalues.append(data.var())
-        eng = 0
-        for i in data:
-            eng += i ** 2
-        eigenvalues.append(eng)
-        eigenvalues.append(len(data))
-        section += eigenvalues
 
-    for i in pi:
+    for i in gt.get_peak_range_all():
+        print(i)
+
+    for i in gt.get_peak_range_eigenvalues_all():
         print(i)

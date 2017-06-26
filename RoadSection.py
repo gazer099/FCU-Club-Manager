@@ -118,6 +118,38 @@ class RoadSection:
         norm = [float(i) / max(self.flow_all) for i in self.flow_all]
         self.flow_all = norm
 
+    def get_peak_range_eigenvalues_all(self, google_trend):
+        peak_range_eigenvalues_all = google_trend.get_peak_range_all()
+        peak_flow_all = []
+        for section in peak_range_eigenvalues_all:
+            # print(section)
+            peak_flow = []
+            for day in range(section[0], section[1] + 1):
+                peak_flow.append(self.flow_all[day])
+            peak_flow_all.append(peak_flow)
+
+        eigenvalues_all = []
+        for peak_flow in peak_flow_all:
+            print(len(peak_flow))
+            print(peak_flow)
+            eigenvalues = []
+            data = np.array(peak_flow)
+            eigenvalues.append(data.max())
+            eigenvalues.append(data.min())
+            eigenvalues.append(data.mean())
+            eigenvalues.append(data.std())
+            eigenvalues.append(data.var())
+            eng = 0
+            for flow in data:
+                eng += flow ** 2
+            eigenvalues.append(eng)
+            eigenvalues.append(len(data))
+            eigenvalues_all.append(eigenvalues)
+
+        for peak_range, eigenvalues in zip(peak_range_eigenvalues_all, eigenvalues_all):
+            peak_range += eigenvalues
+        return peak_range_eigenvalues_all
+
 
 # For debug
 if __name__ == '__main__':
@@ -135,14 +167,5 @@ if __name__ == '__main__':
     gt.show_info()
     # print(gt.get_peak_info())
 
-    peak_flow_all = []
-    for section in gt.get_peak_info():
-        print(section)
-        peak_flow = []
-        for day in range(section[0], section[1] + 1):
-            peak_flow.append(rs.flow_all[day])
-        peak_flow_all.append(peak_flow)
-
-    for i in peak_flow_all:
-        print(len(i))
+    for i in rs.get_peak_range_eigenvalues_all(gt):
         print(i)
