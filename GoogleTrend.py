@@ -1,10 +1,9 @@
 import os
-
-import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib.font_manager import FontProperties
-
 import date_dictionary
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.font_manager import FontProperties
+from sklearn.decomposition import PCA
 
 font = FontProperties(fname=r"c:\windows\Fonts\SimSun.ttc", size=12)
 
@@ -117,6 +116,26 @@ class GoogleTrend:
             section += eigenvalues
         return peak_range_eigenvalues_all
 
+    def get_eigenvalues_all_without_peak_range(self):
+        eigenvalues_all = self.get_peak_range_eigenvalues_all()
+        for data in eigenvalues_all:
+            del data[0:2]
+        # print(eigenvalues_all)
+        return eigenvalues_all
+
+    def get_data_of_dimensionality_reduction_use_pca(self):
+        pca = PCA(n_components=2)
+        data = np.array(self.get_eigenvalues_all_without_peak_range())
+        print('############################')
+        print(data)
+        print('原始shape:', data.shape)
+        print('----------------------------')
+        new_data = pca.fit_transform(data)
+        print(new_data)
+        print('降維後shape:', new_data.shape)
+        print(type(new_data))
+        return new_data
+
 
 # For debug
 if __name__ == '__main__':
@@ -126,8 +145,16 @@ if __name__ == '__main__':
     gt.show_info()
     # gt.show_plot()
 
-    for i in gt.get_peak_range_all():
-        print(i)
+    # for i in gt.get_peak_range_all():
+    #     print(i)
 
     for i in gt.get_peak_range_eigenvalues_all():
         print(i)
+
+    print(type(gt.get_eigenvalues_all_without_peak_range()))
+    for i in gt.get_eigenvalues_all_without_peak_range():
+        print(i)
+
+        # pca_data = gt.get_data_of_dimensionality_reduction_use_pca()
+        # plt.scatter(pca_data[:, 0], pca_data[:, 1])
+        # plt.show()
