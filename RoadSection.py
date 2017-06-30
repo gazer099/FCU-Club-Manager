@@ -1,11 +1,11 @@
+import os
 import csv
-import numpy as np
-import matplotlib.pyplot as plt
 import date_dictionary
 import DataManager
-import os
-
+import numpy as np
+import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
+from sklearn.decomposition import PCA
 
 font = FontProperties(fname=r"c:\windows\Fonts\SimSun.ttc", size=12)
 
@@ -87,6 +87,10 @@ class RoadSection:
         plt.xlabel('day')
         plt.ylabel('flow')
         plt.legend()
+        datum_all_line = []
+        for i in range(len(self.flow_all[self.really_start_day_index:])):
+            datum_all_line.append(0.2)
+        plt.plot(np.array(datum_all_line), 'r')
         plt.show()
 
     def revise_header(self):
@@ -130,8 +134,8 @@ class RoadSection:
 
         eigenvalues_all = []
         for peak_flow in peak_flow_all:
-            print(len(peak_flow))
-            print(peak_flow)
+            # print(len(peak_flow))
+            # print(peak_flow)
             eigenvalues = []
             data = np.array(peak_flow)
             eigenvalues.append(data.max())
@@ -149,6 +153,41 @@ class RoadSection:
         for peak_range, eigenvalues in zip(peak_range_eigenvalues_all, eigenvalues_all):
             peak_range += eigenvalues
         return peak_range_eigenvalues_all
+
+    def get_eigenvalues_all_without_peak_range(self, google_trend):
+        eigenvalues_all = self.get_peak_range_eigenvalues_all(google_trend)
+        for data in eigenvalues_all:
+            del data[0:2]
+        # print(eigenvalues_all)
+        return eigenvalues_all
+
+    def get_data_of_dimensionality_reduction_use_pca(self, google_trend):
+        pca = PCA(n_components=2)
+        data = np.array(self.get_eigenvalues_all_without_peak_range(google_trend))
+        print('############################')
+        print(data)
+        print('原始shape:', data.shape)
+        print('----------------------------')
+        new_data = pca.fit_transform(data)
+        print(new_data)
+        print('降維後shape:', new_data.shape)
+        return new_data
+
+    def get_merge_data_of_dimensionality_reduction_use_pca(self, google_trend):
+        merge_eigenvalues_all = []
+        for trend, flow in zip(google_trend.get_eigenvalues_all_without_peak_range(),
+                               self.get_eigenvalues_all_without_peak_range(google_trend)):
+            merge_eigenvalues_all.append(trend + flow)
+        merge_eigenvalues_all = np.array(merge_eigenvalues_all)
+        pca = PCA(n_components=2)
+        print('############################')
+        print(merge_eigenvalues_all)
+        print('原始shape:', merge_eigenvalues_all.shape)
+        print('----------------------------')
+        new_data = pca.fit_transform(merge_eigenvalues_all)
+        print(new_data)
+        print('降維後shape:', new_data.shape)
+        return new_data
 
 
 # For debug
@@ -169,3 +208,29 @@ if __name__ == '__main__':
 
     for i in rs.get_peak_range_eigenvalues_all(gt):
         print(i)
+
+    print(type(rs.get_eigenvalues_all_without_peak_range(gt)))
+    for i in rs.get_eigenvalues_all_without_peak_range(gt):
+        print(i)
+
+    # gt_pca_data = gt.get_data_of_dimensionality_reduction_use_pca()
+    # rs_pca_data = rs.get_data_of_dimensionality_reduction_use_pca(gt)
+    # plt.scatter(gt_pca_data[:, 0], gt_pca_data[:, 1])
+    # plt.scatter(rs_pca_data[:, 0], rs_pca_data[:, 1], marker="x")
+    # plt.show()
+
+    merge_data_pca = rs.get_merge_data_of_dimensionality_reduction_use_pca(gt)
+    # plt.scatter(merge_data_pca[:, 0], merge_data_pca[:, 1])
+    # plt.show()
+
+    plt.scatter(merge_data_pca[3, 0], merge_data_pca[1, 1], color='r')
+    plt.scatter(merge_data_pca[4, 0], merge_data_pca[2, 1], color='r')
+    plt.scatter(merge_data_pca[5, 0], merge_data_pca[4, 1], color='r')
+    plt.scatter(merge_data_pca[7, 0], merge_data_pca[5, 1], color='r')
+    plt.scatter(merge_data_pca[1, 0], merge_data_pca[7, 1], color='b')
+    plt.scatter(merge_data_pca[2, 0], merge_data_pca[9, 1], color='b')
+    plt.scatter(merge_data_pca[9, 0], merge_data_pca[0, 1], color='b')
+    plt.scatter(merge_data_pca[0, 0], merge_data_pca[4, 1], color='k')
+    plt.scatter(merge_data_pca[6, 0], merge_data_pca[6, 1], color='k')
+    plt.scatter(merge_data_pca[8, 0], merge_data_pca[8, 1], color='k')
+    plt.show()
