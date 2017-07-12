@@ -1,11 +1,13 @@
-import os
 import csv
-import date_dictionary
-import DataManager
-import numpy as np
+import os
+
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.font_manager import FontProperties
 from sklearn.decomposition import PCA
+
+import DataManager
+import date_dictionary
 
 font = FontProperties(fname=r"c:\windows\Fonts\SimSun.ttc", size=12)
 
@@ -234,3 +236,8 @@ if __name__ == '__main__':
     plt.scatter(merge_data_pca[6, 0], merge_data_pca[6, 1], color='k')
     plt.scatter(merge_data_pca[8, 0], merge_data_pca[8, 1], color='k')
     plt.show()
+
+    max_all = []
+    for i in rs.get_eigenvalues_all_without_peak_range(gt):
+        max_all.append(i[0])
+    print(max_all)
