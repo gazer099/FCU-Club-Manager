@@ -1,3 +1,4 @@
+# http://www.cnblogs.com/Finley/p/5946000.html
 import math
 import random
 
@@ -160,7 +161,7 @@ class BPNeuralNetwork:
         labels = [[0.470360878012484], [0.23814641808937209], [1.0], [0.93629862345500392], [0.42914720350543589],
                   [0.22188003803067258], [0.42714232565830268], [0.44363606299863584], [0.39264602538134019]]
 
-        self.setup(7, 12, 1)
+        self.setup(7, 15, 1)
         self.train(cases, labels, 10000, 0.05, 0.1)
         predict_all = []
         for case in cases:
