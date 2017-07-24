@@ -127,6 +127,7 @@ class BPNeuralNetwork:
             predict_all.append(output)
             print(output)
         print('MSE :', mean_squared_error(labels_test, predict_all))
+        return predict_all
 
 
 if __name__ == '__main__':

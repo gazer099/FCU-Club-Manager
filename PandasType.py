@@ -5,6 +5,7 @@ import GoogleTrend
 import RoadSection
 import bpnn
 
+# Load Data-----------------------------------------------------
 gt = GoogleTrend.GoogleTrend('multiTimeline.csv')
 gt.load()
 gt.normalize()
@@ -18,6 +19,7 @@ print(len(rs.flow_all))
 print(rs.really_start_day_index)  # 416
 print(gt.trend_start_day_index)
 
+# Store to Pandas DataFrame Type-------------------------------------------
 # dates = pd.date_range('20150101', periods=639)
 df = pd.DataFrame({
     'trend': gt.trend_percentage,
@@ -49,8 +51,9 @@ df_trend_week = pd.DataFrame.from_dict(trend_week_dict, orient='index').T
 
 print(df_flow_week)
 print(df_trend_week)
-exit()
+# exit()
 
+# Type 1 Neural Network---------------------------------------------------------------
 point = rs.really_start_day_index + 10  # 先跳過有問題那幾筆
 cases = []
 labels = []
@@ -67,8 +70,12 @@ for j in range(0, 100):
     cases_test.append(five_days)
     labels_test.append([df.iloc[point + 5, 0]])
     point += 1
-exit()
+# exit()
 nn = bpnn.BPNeuralNetwork()
-nn.setup(10, 22, 1)
+nn.setup(10, 2, 1)
 nn.train(cases, labels)
-nn.test(cases_test, labels_test)
+predict_all = nn.test(cases_test, labels_test)
+
+plt.plot(labels_test, 'b')
+plt.plot(predict_all, 'r')
+plt.show()
