@@ -32,8 +32,8 @@ assert rs.really_start_day_index == gt.trend_start_day_index  # 416
 # Store to Pandas DataFrame Type-------------------------------------------
 # dates = pd.date_range('20150101', periods=639)
 df = pd.DataFrame({
-    'trend': gt.trend_percentage,  # df[:, 1]
-    'flow': rs.flow_all  # df[:, 0]
+    'flow': rs.flow_all,  # df[:, 0]
+    'trend': gt.trend_percentage  # df[:, 1]
 },
     # index=dates
 )
@@ -113,9 +113,17 @@ print(series_trend_week_sub_mean)
 point = 10  # 先跳過有問題那幾筆
 cases = []
 labels = []
-series_flow_week_sub_mean_normalization = normalize_all(series_flow_week_sub_mean[point:point + 100 + 5])
+series_flow_week_sub_mean_normalization = normalize_all(series_flow_week_sub_mean[point:])
+series_trend_week_sub_mean_normalization = normalize_all(series_trend_week_sub_mean[point:])
 print('***', len(series_flow_week_sub_mean_normalization), point)
-series_trend_week_sub_mean_normalization = normalize_all(series_flow_week_sub_mean[point:point + 100 + 5])
+df_sub_mean_normalization = pd.DataFrame({
+    'f_sn': series_flow_week_sub_mean_normalization,
+    't_sn': series_trend_week_sub_mean_normalization
+})
+print(df_sub_mean_normalization)
+plt.plot(df_sub_mean_normalization)
+plt.show()
+exit()
 for i in range(0, 100):
     five_days = list(series_flow_week_sub_mean_normalization[i:i + 5]) + list(
         series_trend_week_sub_mean_normalization[i:i + 5])
@@ -126,18 +134,14 @@ for i in range(0, 100):
 
 cases_test = []
 labels_test = []
-series_flow_week_sub_mean_normalization = normalize_all(series_flow_week_sub_mean[point:point + 100 + 5])
-series_trend_week_sub_mean_normalization = normalize_all(series_flow_week_sub_mean[point:point + 100 + 5])
-for i in range(0, 100):
+for i in range(100, 200):
     five_days = list(series_flow_week_sub_mean_normalization[i:i + 5]) + list(
         series_trend_week_sub_mean_normalization[i:i + 5])
     cases_test.append(five_days)
     print(i, i + 5, [series_flow_week_sub_mean_normalization[i + 5]])
     labels_test.append([series_flow_week_sub_mean_normalization[i + 5]])
     point += 1
-for i in cases_test:
-    print(i)
-exit()
+# exit()
 nn = bpnn.BPNeuralNetwork()
 nn.setup(10, 2, 1)
 nn.train(cases, labels)
@@ -146,5 +150,3 @@ predict_all = nn.test(cases_test, labels_test)
 plt.plot(labels_test, 'b')
 plt.plot(predict_all, 'r')
 plt.show()
-
-print(predict_all)
