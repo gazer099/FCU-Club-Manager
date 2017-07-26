@@ -121,26 +121,28 @@ df_sub_mean_normalization = pd.DataFrame({
     't_sn': series_trend_week_sub_mean_normalization
 })
 print(df_sub_mean_normalization)
-plt.plot(df_sub_mean_normalization)
-plt.show()
-exit()
+# plt.plot(df_sub_mean_normalization)
+# plt.show()
+
 for i in range(0, 100):
     five_days = list(series_flow_week_sub_mean_normalization[i:i + 5]) + list(
         series_trend_week_sub_mean_normalization[i:i + 5])
     cases.append(five_days)
     print(i, i + 5, [series_flow_week_sub_mean_normalization[i + 5]])
     labels.append([series_flow_week_sub_mean_normalization[i + 5]])
-    point += 1
+    # point += 1
 
 cases_test = []
 labels_test = []
+google = []
 for i in range(100, 200):
     five_days = list(series_flow_week_sub_mean_normalization[i:i + 5]) + list(
         series_trend_week_sub_mean_normalization[i:i + 5])
     cases_test.append(five_days)
     print(i, i + 5, [series_flow_week_sub_mean_normalization[i + 5]])
     labels_test.append([series_flow_week_sub_mean_normalization[i + 5]])
-    point += 1
+    google.append([series_trend_week_sub_mean_normalization[i + 5]])
+    # point += 1
 # exit()
 nn = bpnn.BPNeuralNetwork()
 nn.setup(10, 2, 1)
@@ -149,4 +151,5 @@ predict_all = nn.test(cases_test, labels_test)
 
 plt.plot(labels_test, 'b')
 plt.plot(predict_all, 'r')
+plt.plot(google)
 plt.show()
