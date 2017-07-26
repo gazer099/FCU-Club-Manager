@@ -68,12 +68,14 @@ df_flow_week_sub_mean = df_flow_week.copy()
 df_trend_week_sub_mean = df_trend_week.copy()
 assert df_flow_week_sub_mean.shape == df_trend_week_sub_mean.shape
 
+# subtract mean
 for col in range(df_flow_week_sub_mean.shape[1]):
-    df_flow_week_sub_mean.iloc[:, col] -= df_flow_week_sub_mean.iloc[:, col].mean()
-    df_trend_week_sub_mean.iloc[:, col] -= df_trend_week_sub_mean.iloc[:, col].mean()
+    df_flow_week_sub_mean.iloc[:, col] -= df_flow_week.iloc[:, col].mean()
+    df_trend_week_sub_mean.iloc[:, col] -= df_trend_week.iloc[:, col].mean()
 print(df_flow_week_sub_mean)
 print(df_trend_week_sub_mean)
 
+# transform to series
 series_flow_week_sub_mean = pd.Series(pd.concat(
     [(lambda row: df_flow_week_sub_mean.iloc[row, :])(row) for row in range(df_flow_week_sub_mean.shape[0])], axis=0,
     ignore_index=True))
@@ -83,21 +85,22 @@ series_trend_week_sub_mean = pd.concat(
     ignore_index=True)
 print(series_trend_week_sub_mean)
 
+# normalization
 point = 10  # 先跳過有問題那幾筆
-cases = []
-labels = []
 series_flow_week_sub_mean_normalization = normalize_all(series_flow_week_sub_mean[point:])
 series_trend_week_sub_mean_normalization = normalize_all(series_trend_week_sub_mean[point:])
 print('***', len(series_flow_week_sub_mean_normalization), point)
-df_sub_mean_normalization = pd.DataFrame({
+df_FnT_week_sub_mean_normalization = pd.DataFrame({
     'f_sn': series_flow_week_sub_mean_normalization,
     't_sn': series_trend_week_sub_mean_normalization
 })
-print(df_sub_mean_normalization)
-plt.plot(df_sub_mean_normalization)
-plt.show()
+print(df_FnT_week_sub_mean_normalization)
+# plt.plot(df_FnT_week_sub_mean_normalization)
+# plt.show()
 exit()
 
+cases = []
+labels = []
 for i in range(0, 100):
     five_days = list(series_flow_week_sub_mean_normalization[i:i + 5]) + list(
         series_trend_week_sub_mean_normalization[i:i + 5])
