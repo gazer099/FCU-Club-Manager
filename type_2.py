@@ -63,33 +63,6 @@ print(df_flow_week)
 print(df_trend_week)
 # exit()
 
-# Type 1 Neural Network---------------------------------------------------------------
-# point = rs.really_start_day_index + 10  # 先跳過有問題那幾筆
-# cases = []
-# labels = []
-# for i in range(0, 100):
-#     five_days = list(df.iloc[point:point + 5, 0]) + list(df.iloc[point:point + 5, 1])
-#     cases.append(five_days)
-#     labels.append([df.iloc[point + 5, 0]])
-#     point += 1
-#
-# cases_test = []
-# labels_test = []
-# for j in range(0, 100):
-#     five_days = list(df.iloc[point:point + 5, 0]) + list(df.iloc[point:point + 5, 1])
-#     cases_test.append(five_days)
-#     labels_test.append([df.iloc[point + 5, 0]])
-#     point += 1
-# exit()
-# nn = bpnn.BPNeuralNetwork()
-# nn.setup(10, 2, 1)
-# nn.train(cases, labels)
-# predict_all = nn.test(cases_test, labels_test)
-
-# plt.plot(labels_test, 'b')
-# plt.plot(predict_all, 'r')
-# plt.show()
-
 # Type 2 Neural Network---------------------------------------------------------------
 df_flow_week_sub_mean = df_flow_week.copy()
 df_trend_week_sub_mean = df_trend_week.copy()
@@ -121,8 +94,9 @@ df_sub_mean_normalization = pd.DataFrame({
     't_sn': series_trend_week_sub_mean_normalization
 })
 print(df_sub_mean_normalization)
-# plt.plot(df_sub_mean_normalization)
-# plt.show()
+plt.plot(df_sub_mean_normalization)
+plt.show()
+exit()
 
 for i in range(0, 100):
     five_days = list(series_flow_week_sub_mean_normalization[i:i + 5]) + list(
@@ -130,7 +104,6 @@ for i in range(0, 100):
     cases.append(five_days)
     print(i, i + 5, [series_flow_week_sub_mean_normalization[i + 5]])
     labels.append([series_flow_week_sub_mean_normalization[i + 5]])
-    # point += 1
 
 cases_test = []
 labels_test = []
@@ -142,14 +115,14 @@ for i in range(100, 200):
     print(i, i + 5, [series_flow_week_sub_mean_normalization[i + 5]])
     labels_test.append([series_flow_week_sub_mean_normalization[i + 5]])
     google.append([series_trend_week_sub_mean_normalization[i + 5]])
-    # point += 1
+
 # exit()
 nn = bpnn.BPNeuralNetwork()
 nn.setup(10, 2, 1)
-nn.train(cases, labels)
-predict_all = nn.test(cases_test, labels_test)
+nn.train(cases_test, labels_test)
+predict_all = nn.test(cases, labels)
 
 plt.plot(labels_test, 'b')
 plt.plot(predict_all, 'r')
-plt.plot(google)
+# plt.plot(google)
 plt.show()
