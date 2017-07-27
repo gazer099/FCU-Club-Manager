@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import GoogleTrend
 import RoadSection
 import bpnn
+import dynamic_bpnn
 
 # Load Data-----------------------------------------------------
 gt = GoogleTrend.GoogleTrend('multiTimeline.csv')
@@ -44,9 +45,16 @@ for j in range(0, 100):
     cases_test.append(five_days)
     labels_test.append([df.iloc[point + 5, 0]])
     point += 1
-# exit()
-nn = bpnn.BPNeuralNetwork()
-nn.setup(10, 2, 1)
+
+# # Basic version
+# nn = bpnn.BPNeuralNetwork()
+# nn.setup(10, 2, 1)
+# nn.train(cases, labels)
+# predict_all = nn.test(cases_test, labels_test)
+
+# TensorFlow version
+nn = dynamic_bpnn.BPNeuralNetwork()
+nn.setup(10, [2], 1)
 nn.train(cases, labels)
 predict_all = nn.test(cases_test, labels_test)
 
