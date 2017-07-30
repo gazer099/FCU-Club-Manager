@@ -41,7 +41,13 @@ class RoadSection:
         dm = DataManager.DataManager()
         self.road_section_name = dm.get_road_section_name(self.file_name)
         # Fix original file header
-        self.revise_header()
+        try:
+            file = open(str(os.path.join(os.getcwd(), 'RoadSectionData', 'Revised', 'Revised_' + self.file_name)))
+        except FileNotFoundError:
+            print('[execute]revise file header')
+            self.revise_header()
+        else:
+            file.close()
         # 清空不明原因 self.dict_entire 內的殘值
         for day in self.dict_entire:
             self.dict_entire[day] = 0
