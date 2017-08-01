@@ -164,7 +164,7 @@ while True:
     end = time.time()
     elapsed = end - start
     print("Time taken: ", elapsed, "seconds.")
-    if nn.mse < 0.022:
+    if nn.mse < 0.021:
         break
 
 plt.plot(labels_test, 'b')
@@ -172,18 +172,23 @@ plt.plot(predict_all, 'r')
 # plt.plot(google)
 plt.show()
 
+nn.save_model('tf_model\save_net.ckpt')
+
+
 # predict_all = nn.test(cases, labels)
 # plt.plot(labels, 'b')
 # plt.plot(predict_all, 'r')
 # # plt.plot(google)
 # plt.show()
-print(type(labels_test))
-print(labels_test)
-# exit()
-b = anti_normalize_all(series_flow_week_sub_mean, [item[0] for item in labels_test])
-p = anti_normalize_all(series_flow_week_sub_mean, predict_all)
-plt.plot(b, 'b')
-plt.plot(p, 'r')
-# plt.plot(google)
-plt.show()
-print(mean_squared_error(b, p))
+
+
+# print(type(labels_test))
+# print(labels_test)
+# # exit()
+# b = anti_normalize_all(series_flow_week_sub_mean, [item[0] for item in labels_test])
+# p = anti_normalize_all(series_flow_week_sub_mean, predict_all)
+# plt.plot(b, 'b')
+# plt.plot(p, 'r')
+# # plt.plot(google)
+# plt.show()
+# print(mean_squared_error(b, p))

@@ -81,6 +81,14 @@ class BPNeuralNetwork:
         print('MSE :', self.mse)
         return predict_all
 
+    def save_model(self, model_path):
+        saver = tf.train.Saver()
+        save_path = saver.save(self.session, model_path)
+        print("Save to path: ", save_path)
+
+    def load_model(self, model_path):
+        saver = tf.train.Saver()
+        saver.restore(self.session, model_path)
 
 if __name__ == '__main__':
     nn = BPNeuralNetwork()
