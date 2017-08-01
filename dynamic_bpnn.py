@@ -27,6 +27,7 @@ class BPNeuralNetwork:
         self.hidden_layers = []
         self.output_layer = None
         self.label_layer = None
+        self.mse = None
 
     def __del__(self):
         self.session.close()
@@ -76,7 +77,8 @@ class BPNeuralNetwork:
         # print(self.predict(test_data))
 
         predict_all = self.predict(cases_test)  # Direct predict entire array
-        print('MSE :', mean_squared_error(labels_test, predict_all))
+        self.mse = mean_squared_error(labels_test, predict_all)
+        print('MSE :', self.mse)
         return predict_all
 
 
