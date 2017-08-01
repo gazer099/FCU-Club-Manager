@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 import GoogleTrend
 import RoadSection
 import bpnn
+import dynamic_bpnn
+import time
+from sklearn.metrics import mean_squared_error
 
 
 def normalize(series, x):
@@ -14,6 +17,13 @@ def normalize_all(series):
     series_max = series.max()
     series_min = series.min()
     return pd.Series([(lambda x: 2 / (series_max - series_min) * (x - series_min) - 1)(x) for x in series])
+
+
+def anti_normalize_all(src_series, target_series):
+    src_series_max = src_series.max()
+    src_series_min = src_series.min()
+    return pd.Series(
+        [(lambda y: (y + 1) * ((src_series_max - src_series_min) / 2) + src_series_min)(y) for y in target_series])
 
 
 # Load Data-----------------------------------------------------
@@ -97,7 +107,25 @@ df_FnT_week_sub_mean_normalization = pd.DataFrame({
 print(df_FnT_week_sub_mean_normalization)
 # plt.plot(df_FnT_week_sub_mean_normalization)
 # plt.show()
-exit()
+# exit()
+
+# anti-normalization
+series_flow_week_sub_mean_anti_normalization = anti_normalize_all(series_flow_week_sub_mean[point:],
+                                                                  series_flow_week_sub_mean_normalization)
+series_trend_week_sub_mean_anti_normalization = anti_normalize_all(series_trend_week_sub_mean[point:],
+                                                                   series_trend_week_sub_mean_normalization)
+print('anti!!!!!!!!!!!!!!!!!!!!!!!')
+cp_series_flow_week_sub_mean = series_flow_week_sub_mean[point:].copy()
+cp_series_trend_week_sub_mean = series_trend_week_sub_mean[point:].copy()
+print(type(series_flow_week_sub_mean), type(series_trend_week_sub_mean))
+df_FnT_week_sub_mean_normalization = pd.DataFrame({
+    'f': cp_series_flow_week_sub_mean,
+    't': cp_series_trend_week_sub_mean,
+    'f_san': series_flow_week_sub_mean_anti_normalization,
+    't_san': series_trend_week_sub_mean_anti_normalization
+})
+print(df_FnT_week_sub_mean_normalization)
+# exit()
 
 cases = []
 labels = []
@@ -120,12 +148,42 @@ for i in range(100, 200):
     google.append([series_trend_week_sub_mean_normalization[i + 5]])
 
 # exit()
-nn = bpnn.BPNeuralNetwork()
-nn.setup(10, 2, 1)
-nn.train(cases_test, labels_test)
-predict_all = nn.test(cases, labels)
+# nn = bpnn.BPNeuralNetwork()
+# nn.setup(10, 2, 1)
+# nn.train(cases_test, labels_test)
+# predict_all = nn.test(cases, labels)
+
+
+# TensorFlow version
+nn = dynamic_bpnn.BPNeuralNetwork()
+nn.setup(10, [2], 1)
+while True:
+    start = time.time()
+    nn.train(cases, labels)
+    predict_all = nn.test(cases_test, labels_test)
+    end = time.time()
+    elapsed = end - start
+    print("Time taken: ", elapsed, "seconds.")
+    if nn.mse < 0.022:
+        break
 
 plt.plot(labels_test, 'b')
 plt.plot(predict_all, 'r')
 # plt.plot(google)
 plt.show()
+
+# predict_all = nn.test(cases, labels)
+# plt.plot(labels, 'b')
+# plt.plot(predict_all, 'r')
+# # plt.plot(google)
+# plt.show()
+print(type(labels_test))
+print(labels_test)
+# exit()
+b = anti_normalize_all(series_flow_week_sub_mean, [item[0] for item in labels_test])
+p = anti_normalize_all(series_flow_week_sub_mean, predict_all)
+plt.plot(b, 'b')
+plt.plot(p, 'r')
+# plt.plot(google)
+plt.show()
+print(mean_squared_error(b, p))
