@@ -146,33 +146,45 @@ for i in range(100, 200):
     print(i, i + 5, [series_flow_week_sub_mean_normalization[i + 5]])
     labels_test.append([series_flow_week_sub_mean_normalization[i + 5]])
     google.append([series_trend_week_sub_mean_normalization[i + 5]])
-
 # exit()
+
+# # Basic version
 # nn = bpnn.BPNeuralNetwork()
 # nn.setup(10, 2, 1)
-# nn.train(cases_test, labels_test)
-# predict_all = nn.test(cases, labels)
+# while True:
+#     start = time.time()
+#     nn.train(cases_test, labels_test)
+#     predict_all = nn.test(cases, labels)
+#     end = time.time()
+#     elapsed = end - start
+#     print("Time taken: ", elapsed, "seconds.")
+#     if nn.mse < 0.21:
+#         break
 
+# # TensorFlow version
+# nn = dynamic_bpnn.BPNeuralNetwork()
+# nn.setup(10, [2], 1)
+# while True:
+#     start = time.time()
+#     nn.train(cases, labels)
+#     predict_all = nn.test(cases_test, labels_test)
+#     end = time.time()
+#     elapsed = end - start
+#     print("Time taken: ", elapsed, "seconds.")
+#     if nn.mse < 0.020:
+#         break
+# nn.save_model('tf_model\save_net.ckpt')
 
-# TensorFlow version
+# Load
 nn = dynamic_bpnn.BPNeuralNetwork()
 nn.setup(10, [2], 1)
-while True:
-    start = time.time()
-    nn.train(cases, labels)
-    predict_all = nn.test(cases_test, labels_test)
-    end = time.time()
-    elapsed = end - start
-    print("Time taken: ", elapsed, "seconds.")
-    if nn.mse < 0.021:
-        break
+nn.load_model('tf_model\save_net.ckpt')
+predict_all = nn.test(cases_test, labels_test)
 
 plt.plot(labels_test, 'b')
 plt.plot(predict_all, 'r')
 # plt.plot(google)
 plt.show()
-
-nn.save_model('tf_model\save_net.ckpt')
 
 
 # predict_all = nn.test(cases, labels)

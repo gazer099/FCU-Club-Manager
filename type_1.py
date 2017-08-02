@@ -47,27 +47,30 @@ for j in range(0, 100):
     labels_test.append([df.iloc[point + 5, 0]])
     point += 1
 
-start = time.time()
-# Basic version
-nn = bpnn.BPNeuralNetwork()
-nn.setup(10, 2, 1)
-nn.train(cases, labels)
-predict_all = nn.test(cases_test, labels_test)
-end = time.time()
-elapsed = end - start
-print("Time taken: ", elapsed, "seconds.")
+# start = time.time()
+# # Basic version
+# nn = bpnn.BPNeuralNetwork()
+# nn.setup(10, 2, 1)
+# nn.train(cases, labels)
+# predict_all = nn.test(cases_test, labels_test)
+# end = time.time()
+# elapsed = end - start
+# print("Time taken: ", elapsed, "seconds.")
 
-start = time.time()
 # TensorFlow version
 nn = dynamic_bpnn.BPNeuralNetwork()
 nn.setup(10, [2], 1)
-nn.train(cases, labels)
-predict_all = nn.test(cases_test, labels_test)
-end = time.time()
-elapsed = end - start
-print("Time taken: ", elapsed, "seconds.")
+while True:
+    start = time.time()
+    nn.train(cases, labels)
+    predict_all = nn.test(cases_test, labels_test)
+    end = time.time()
+    elapsed = end - start
+    print("Time taken: ", elapsed, "seconds.")
+    if nn.mse < 0.012:
+        break
 
-exit()
+
 plt.plot(labels_test, 'b')
 plt.plot(predict_all, 'r')
 plt.show()
