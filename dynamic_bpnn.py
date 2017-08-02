@@ -3,6 +3,10 @@ import tensorflow as tf
 import numpy as np
 from sklearn.metrics import mean_squared_error
 
+config = tf.ConfigProto(
+    device_count={'GPU': 0}
+)
+
 
 def make_layer(inputs, in_size, out_size, activate=None):
     weights = tf.Variable(tf.random_normal([in_size, out_size]))
@@ -16,7 +20,7 @@ def make_layer(inputs, in_size, out_size, activate=None):
 
 class BPNeuralNetwork:
     def __init__(self):
-        self.session = tf.Session()
+        self.session = tf.Session(config=config)
         self.loss = None
         self.optimizer = None
         self.input_n = 0
