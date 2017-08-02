@@ -46,6 +46,7 @@ class BPNeuralNetwork:
         self.output_weights = []
         self.input_correction = []
         self.output_correction = []
+        self.mse = None
 
     def setup(self, ni, nh, no):
         self.input_n = ni + 1
@@ -133,8 +134,9 @@ class BPNeuralNetwork:
         for case in cases_test:
             output = self.predict(case)
             predict_all.append(output)
-            print(output)
-        print('MSE :', mean_squared_error(labels_test, predict_all))
+            # print(output)
+        self.mse = mean_squared_error(labels_test, predict_all)
+        print('MSE :', self.mse)
         return predict_all
 
 
