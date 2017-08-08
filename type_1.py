@@ -23,8 +23,8 @@ assert rs.really_start_day_index == gt.trend_start_day_index  # 416
 # Store to Pandas DataFrame Type-------------------------------------------
 # dates = pd.date_range('20150101', periods=639)
 df = pd.DataFrame({
-    'trend': gt.trend_percentage,
-    'flow': rs.flow_all
+    'flow': rs.flow_all,
+    'trend': gt.trend_percentage
 },
     # index=dates
 )
