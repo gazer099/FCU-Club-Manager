@@ -73,10 +73,14 @@ for input_day_size in range(1, 11):
     # plt.plot(labels_test, 'b')
     # plt.plot(predict_all, 'r')
     # plt.show()
+    ten_days_mse_all.append(input_day_mse_all)
     del nn
 
 total_end_time = time.time()
 print("Total time taken: ", total_end_time - total_start_time, "seconds.")
+
+for i in ten_days_mse_all:
+    print(np.array(i).min())
 
 # start = time.time()
 # # Basic version
