@@ -52,9 +52,33 @@ for input_day_size in range(1, 11):
         labels_test.append([df.iloc[point + input_day_size, 0]])
         point += 1
 
-    # TensorFlow version
-    nn = dynamic_bpnn.BPNeuralNetwork()
-    nn.setup(input_day_size * 2, [2], 1)
+    # # TensorFlow version
+    # nn = dynamic_bpnn.BPNeuralNetwork()
+    # nn.setup(input_day_size * 2, [2], 1)
+    # input_day_mse_all = []
+    # for _ in range(1):
+    #     start = time.time()
+    #     nn.train(cases, labels)
+    #     predict_all = nn.test(cases_test, labels_test)
+    #     end = time.time()
+    #     elapsed = end - start
+    #     print("Time taken: ", elapsed, "seconds.")
+    #     input_day_mse_all.append(nn.mse)
+    #     if nn.mse == np.array(input_day_mse_all).min():
+    #         if not os.path.isdir(os.getcwd() + '\\type_1_ten_days_work'):
+    #             os.mkdir(os.getcwd() + '\\type_1_ten_days_work')
+    #         if not os.path.isdir(os.getcwd() + '\\type_1_ten_days_work' + '\\' + str(input_day_size)):
+    #             os.mkdir(os.getcwd() + '\\type_1_ten_days_work' + '\\' + str(input_day_size))
+    #         nn.save_model('type_1_ten_days_work\\' + str(input_day_size) + '\\' + str(input_day_size) + '.ckpt')
+    # # plt.plot(labels_test, 'b')
+    # # plt.plot(predict_all, 'r')
+    # # plt.show()
+    # ten_days_mse_all.append(input_day_mse_all)
+    # del nn
+
+    # Basic version
+    nn = bpnn.BPNeuralNetwork()
+    nn.setup(input_day_size * 2, 2, 1)
     input_day_mse_all = []
     for _ in range(1):
         start = time.time()
@@ -64,12 +88,6 @@ for input_day_size in range(1, 11):
         elapsed = end - start
         print("Time taken: ", elapsed, "seconds.")
         input_day_mse_all.append(nn.mse)
-        if nn.mse == np.array(input_day_mse_all).min():
-            if not os.path.isdir(os.getcwd() + '\\type_1_ten_days_work'):
-                os.mkdir(os.getcwd() + '\\type_1_ten_days_work')
-            if not os.path.isdir(os.getcwd() + '\\type_1_ten_days_work' + '\\' + str(input_day_size)):
-                os.mkdir(os.getcwd() + '\\type_1_ten_days_work' + '\\' + str(input_day_size))
-            nn.save_model('type_1_ten_days_work\\' + str(input_day_size) + '\\' + str(input_day_size) + '.ckpt')
     # plt.plot(labels_test, 'b')
     # plt.plot(predict_all, 'r')
     # plt.show()
@@ -81,13 +99,5 @@ print("Total time taken: ", total_end_time - total_start_time, "seconds.")
 
 for i in ten_days_mse_all:
     print(np.array(i).min())
-
-# start = time.time()
-# # Basic version
-# nn = bpnn.BPNeuralNetwork()
-# nn.setup(10, 2, 1)
-# nn.train(cases, labels)
-# predict_all = nn.test(cases_test, labels_test)
-# end = time.time()
-# elapsed = end - start
-# print("Time taken: ", elapsed, "seconds.")
+for j in ten_days_mse_all:
+    print(j)
