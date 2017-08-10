@@ -18,12 +18,12 @@ def make_matrix(m, n, fill=0.0):
     return mat
 
 
-# def sigmoid(x):
-#     return 1.0 / (1.0 + math.exp(-x))
-#
-#
-# def sigmoid_derivative(x):
-#     return x * (1 - x)
+def sigmoid(x):
+    return 1.0 / (1.0 + math.exp(-x))
+
+
+def sigmoid_derivative(x):
+    return x * (1 - x)
 
 
 def tangent_sigmoid(x):
@@ -33,6 +33,9 @@ def tangent_sigmoid(x):
 def tangent_sigmoid_derivative(x):
     return 1 - x ** 2
 
+
+activate_function = sigmoid
+activate_function_derivative = sigmoid_derivative
 
 class BPNeuralNetwork:
     def __init__(self):
@@ -79,13 +82,13 @@ class BPNeuralNetwork:
             total = 0.0
             for i in range(self.input_n):
                 total += self.input_cells[i] * self.input_weights[i][j]
-            self.hidden_cells[j] = tangent_sigmoid(total)
+            self.hidden_cells[j] = activate_function(total)
         # activate output layer
         for k in range(self.output_n):
             total = 0.0
             for j in range(self.hidden_n):
                 total += self.hidden_cells[j] * self.output_weights[j][k]
-            self.output_cells[k] = tangent_sigmoid(total)
+            self.output_cells[k] = activate_function(total)
         return self.output_cells[:]
 
     def back_propagate(self, case, label, learn, correct):
@@ -95,14 +98,14 @@ class BPNeuralNetwork:
         output_deltas = [0.0] * self.output_n
         for o in range(self.output_n):
             error = label[o] - self.output_cells[o]
-            output_deltas[o] = tangent_sigmoid_derivative(self.output_cells[o]) * error
+            output_deltas[o] = activate_function_derivative(self.output_cells[o]) * error
         # get hidden layer error
         hidden_deltas = [0.0] * self.hidden_n
         for h in range(self.hidden_n):
             error = 0.0
             for o in range(self.output_n):
                 error += output_deltas[o] * self.output_weights[h][o]
-            hidden_deltas[h] = tangent_sigmoid_derivative(self.hidden_cells[h]) * error
+            hidden_deltas[h] = activate_function_derivative(self.hidden_cells[h]) * error
         # update output weights
         for h in range(self.hidden_n):
             for o in range(self.output_n):
