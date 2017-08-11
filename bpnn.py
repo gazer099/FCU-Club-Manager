@@ -37,6 +37,7 @@ def tangent_sigmoid_derivative(x):
 activate_function = sigmoid
 activate_function_derivative = sigmoid_derivative
 
+
 class BPNeuralNetwork:
     def __init__(self):
         self.input_n = 0
