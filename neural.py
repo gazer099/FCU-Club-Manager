@@ -18,13 +18,13 @@ class Neu:
     def __init__(self, seg):
         self.segment = seg
 
-        self.inputnumber = 10
+        self.inputnumber = 2
         self.hidnumber = 2
         self.outputnumber = 1
 
-        self.epoch = 2000
-        self.learnspeedwd = 0.06
-        self.learnspeedab = 0.006
+        self.epoch = 8000
+        self.learnspeedwd = 0.05
+        self.learnspeedab = 0.0005
 
         self.mse = 0
 

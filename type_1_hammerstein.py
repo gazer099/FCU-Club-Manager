@@ -27,69 +27,86 @@ assert rs.really_start_day_index == gt.trend_start_day_index  # 416
 
 # Store to Pandas DataFrame Type-------------------------------------------
 # dates = pd.date_range('20150101', periods=639)
+# Normalize data 1 to -1
+def normalize_all(series):
+    series_max = series.max()
+    series_min = series.min()
+    return pd.Series([(lambda x: 2 / (series_max - series_min) * (x - series_min) - 1)(x) for x in series])
 df = pd.DataFrame({
-    'flow': rs.flow_all,
-    'trend': gt.trend_percentage
+    'flow': normalize_all(np.array(rs.flow_all[rs.really_start_day_index:])),
+    'trend': normalize_all(np.array(gt.trend_percentage[rs.really_start_day_index:]))
 },
     # index=dates
 )
 
 # Type 1 Neural Network---------------------------------------------------------------
-point = rs.really_start_day_index + 10  # 先跳過有問題那幾筆
+point = 10  # 先跳過有問題那幾筆
 cases = []
 labels = []
 for i in range(0, 100):
-    five_days = list(df.iloc[point:point + 5, 0]) + list(df.iloc[point:point + 5, 1])
-    cases.append(five_days)
-    labels.append([df.iloc[point + 5, 0]])
+    one_day = list(df.iloc[point:point + 1, 0]) + list(df.iloc[point:point + 1, 1])
+    cases.append(one_day)
+    labels.append([df.iloc[point + 1, 0]])
     point += 1
 
 cases_test = []
 labels_test = []
 for j in range(0, 100):
-    five_days = list(df.iloc[point:point + 5, 0]) + list(df.iloc[point:point + 5, 1])
-    cases_test.append(five_days)
-    labels_test.append([df.iloc[point + 5, 0]])
+    one_day = list(df.iloc[point:point + 1, 0]) + list(df.iloc[point:point + 1, 1])
+    cases_test.append(one_day)
+    labels_test.append([df.iloc[point + 1, 0]])
     point += 1
 # ---------------------------------------------------------------------------------------
-# for c, l in zip(cases, labels):
-#     print(c, l)
-neutest = neural.Neu('03F2614S-03F2709S')
+mse_all = []
+total_start_time = time.time()
+for r in range(100):
+    start = time.time()
+    neutest = neural.Neu('03F2614S-03F2709S' + ' #' + str(r))
+    trainfinished = False
+    while trainfinished != True:
+        try:
+            for i in range(neutest.epoch):
+                # print(i + 1)
+                # count = 0
+                for c, l in zip(cases, labels):
+                    inputlist = c
+                    expect = l
 
-trainfinished = False
-while trainfinished != True:
-    try:
-        for i in range(neutest.epoch):
-            # print(i + 1)
-            # count = 0
-            for c, l in zip(cases, labels):
-                inputlist = c
-                expect = l
+                    # print('input: ', inputlist)
+                    # print('expect: ', expect)
 
-                # print('input: ', inputlist)
-                # print('expect: ', expect)
+                    result = neutest.forward(inputlist)
+                    # print('result: ', result)
+                    neutest.backward(expect)
+                    # print(count)
+                    # count = count + 1
+                    # if count == 288:
+                    #     count = 0
+                neutest.cleartemporalepoch()
+        except OverflowError:
+            neutest = neural.Neu('03F2614S-03F2709S' + ' #' + str(r))
+            print('math error')
+        else:
+            trainfinished = True
+    end = time.time()
+    elapsed = end - start
+    print("Time taken: ", elapsed, "seconds.")
+    # test
+    predict_all = []
+    for test1 in cases_test:
+        result = neutest.forward(test1)
+        predict_all.append(result)
+    mse = mean_squared_error(labels_test[50:], predict_all[50:])
+    print('MSE :', mse)
+    mse_all.append(mse)
 
-                result = neutest.forward(inputlist)
-                # print('result: ', result)
-                neutest.backward(expect)
-                # print(count)
-                # count = count + 1
-                # if count == 288:
-                #     count = 0
-            neutest.cleartemporalepoch()
-    except OverflowError:
-        neutest = neural.Neu('03F2614S-03F2709S')
-        print('math error')
-    else:
-        trainfinished = True
+total_end_time = time.time()
+print("Total time taken: ", total_end_time - total_start_time, "seconds.")
 
-predict_all = []
-for test1 in cases_test:
-    result = neutest.forward(test1)
-    predict_all.append(result)
-mse = mean_squared_error(labels_test, predict_all)
-print('MSE :', mse)
+print(mse_all)
+print(np.array(mse_all).min())
 
-plt.plot(labels_test, 'b')
-plt.plot(predict_all, 'r')
-plt.show()
+
+# plt.plot(labels_test, 'b')
+# plt.plot(predict_all, 'r')
+# plt.show()
