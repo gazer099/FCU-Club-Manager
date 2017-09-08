@@ -23,8 +23,8 @@ class Neu:
         self.outputnumber = 1
 
         self.epoch = 8000
-        self.learnspeedwd = 0.05
-        self.learnspeedab = 0.0005
+        self.learnspeedwd = 0.001  # 0.05
+        self.learnspeedab = 0.00035  # 0.0005
 
         self.mse = 0
 
